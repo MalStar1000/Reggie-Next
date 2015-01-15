@@ -118,7 +118,7 @@ class ReggieSplashScreen(QtWidgets.QSplashScreen):
         Loads the raw data from splash_config.txt
         """
         cfgData = {}
-        with open('../../../reggiedata/splash_config.txt', encoding='utf-8') as cfg:
+        with open('reggiedata/splash_config.txt', encoding='utf-8') as cfg:
             for line in cfg:
                 lsplit = line.replace('\n', '').split(':')
                 key = lsplit[0].lower()
@@ -143,7 +143,7 @@ class ReggieSplashScreen(QtWidgets.QSplashScreen):
         """
         Reads the info from self.cfgData and loads stuff
         """
-        self.basePix = QtGui.QPixmap(os.path.join('../../../reggiedata', self.cfgData['base_image']))
+        self.basePix = QtGui.QPixmap(os.path.join('reggiedata', self.cfgData['base_image']))
         print(os.getcwd())
 
         def loadFont(name):
@@ -173,9 +173,9 @@ class ReggieSplashScreen(QtWidgets.QSplashScreen):
         self.meterPos = self.cfgData.get('meter_position', (0, 0))
         self.meterWidth = self.cfgData.get('meter_width', 64)
 
-        self.meterL = QtGui.QPixmap(os.path.join('../../../reggiedata', mNameL))
-        self.meterM = QtGui.QPixmap(os.path.join('../../../reggiedata', mNameM))
-        self.meterR = QtGui.QPixmap(os.path.join('../../../reggiedata', mNameR))
+        self.meterL = QtGui.QPixmap(os.path.join('reggiedata', mNameL))
+        self.meterM = QtGui.QPixmap(os.path.join('reggiedata', mNameM))
+        self.meterR = QtGui.QPixmap(os.path.join('reggiedata', mNameR))
 
 
     def setProgressLimit(self, limit):
@@ -336,7 +336,7 @@ def FilesAreMissing():
     Checks to see if any of the required files for Reggie are missing
     """
 
-    if not os.path.isdir('../../../reggiedata'):
+    if not os.path.isdir('reggiedata'):
         QtWidgets.QMessageBox.warning(None, trans.string('Err_MissingFiles', 0), trans.string('Err_MissingFiles', 1))
         return True
 
@@ -347,7 +347,7 @@ def FilesAreMissing():
     missing = []
 
     for check in required:
-        if not os.path.isfile('../../../reggiedata/' + check):
+        if not os.path.isfile('reggiedata/' + check):
             missing.append(check)
 
     if len(missing) > 0:
@@ -932,7 +932,7 @@ def LoadSpriteListData(reload_=False):
 
     paths = gamedef.recursiveFiles('spritelistdata')
     new = []
-    new.append('../../../reggiedata/spritelistdata.txt')
+    new.append('reggiedata/spritelistdata.txt')
     for path in paths: new.append(path)
     paths = new
 
@@ -2349,7 +2349,7 @@ def LoadOverrides():
     global Overrides
     Overrides = [None]*320
 
-    OverrideBitmap = QtGui.QPixmap('../../../reggiedata/overrides.png')
+    OverrideBitmap = QtGui.QPixmap('reggiedata/overrides.png')
     idx = 0
     xcount = OverrideBitmap.width() // 24
     ycount = OverrideBitmap.height() // 24
@@ -2846,7 +2846,7 @@ class LevelUnit():
         Adds an area
         """
         if course is None:
-            getit = open('../../../reggiedata/blankcourse.bin', 'rb')
+            getit = open('reggiedata/blankcourse.bin', 'rb')
             course = getit.read()
             getit.close()
         newArea = FakeAreaUnit()
@@ -5307,7 +5307,7 @@ class EntranceItem(LevelEditorItem):
         """
         if EntranceItem.EntranceImages is None:
             ei = []
-            src = QtGui.QPixmap('../../../reggiedata/entrances.png')
+            src = QtGui.QPixmap('reggiedata/entrances.png')
             for i in range(18):
                 ei.append(src.copy(i * 24, 0, 24, 24))
             EntranceItem.EntranceImages = ei
@@ -8238,7 +8238,7 @@ def LoadTheme():
     if id is None: id = 'Classic'
     if id != 'Classic':
 
-        path = str('../../../reggiedata\\themes\\'+id).replace('\\', '/')
+        path = str('reggiedata\\themes\\'+id).replace('\\', '/')
         with open(path, 'rb') as f:
             theme = ReggieTheme(f)
         
@@ -8501,7 +8501,7 @@ class ReggieTheme():
         cache = self.iconCacheLg if big else self.iconCacheSm
 
         if name not in cache:
-            path = '../../../reggiedata/ico/lg/icon-' if big else '../../../reggiedata/ico/sm/icon-'
+            path = 'reggiedata/ico/lg/icon-' if big else 'reggiedata/ico/sm/icon-'
             path += name
             cache[name] = QtGui.QIcon(path)
 
@@ -8959,7 +8959,7 @@ class ReggieGameDefinition():
         MaxVer = 1.0
 
         # Parse the file (errors are handled by __init__())
-        path = '../../../reggiedata/games/' + name + '/main.xml'
+        path = 'reggiedata/games/' + name + '/main.xml'
         tree = etree.parse(path)
         root = tree.getroot()
 
@@ -8977,7 +8977,7 @@ class ReggieGameDefinition():
         else: self.base = ReggieGameDefinition()
 
         # Parse the nodes
-        addpath = '../../../reggiedata/games/' + name + '/'
+        addpath = 'reggiedata/games/' + name + '/'
         for node in root:
             n = node.tag.lower()
             if n in ('file', 'folder'):
@@ -8989,9 +8989,9 @@ class ReggieGameDefinition():
                 if 'game' in node.attrib:
                     if node.attrib['game'] != trans.string('Gamedefs', 13): # 'New Super Mario Bros. Wii'
                         def_ = FindGameDef(node.attrib['game'], name)
-                        path = '../../../reggiedata/games/' + def_.gamepath + '/' + node.attrib['path']
+                        path = 'reggiedata/games/' + def_.gamepath + '/' + node.attrib['path']
                     else:
-                        path = '../../../reggiedata/' + node.attrib['path']
+                        path = 'reggiedata/' + node.attrib['path']
 
                 ListToAddTo = eval('self.%ss' % n) # self.files or self.folders
                 newdef = self.GameDefinitionFile(path, patch)
@@ -9019,7 +9019,7 @@ class ReggieGameDefinition():
         Returns the folder to a bg image. Layer must be 'a' or 'b'
         """
         # Name will be of the format '0000.png'
-        fallback = '../../../reggiedata/bg' + layer
+        fallback = 'reggiedata/bg' + layer
         filename = 'bg%s/%s' % (layer, name)
 
 
@@ -9250,7 +9250,7 @@ def getMusic():
 def FindGameDef(name, skip=None):
     "Helper function to find a game def with a specific name. Skip will be skipped"""
     toSearch = [None] # Add the original game first
-    for folder in os.listdir('../../../reggiedata/games'): toSearch.append(folder)
+    for folder in os.listdir('reggiedata/games'): toSearch.append(folder)
 
     for folder in toSearch:
         if folder == skip: continue
@@ -9305,15 +9305,15 @@ class ReggieTranslation():
         self.translator = 'Treeki, Tempus'
 
         self.files = {
-            'bga': '../../../reggiedata/bga.txt',
-            'bgb': '../../../reggiedata/bgb.txt',
-            'entrancetypes': '../../../reggiedata/entrancetypes.txt',
-            'levelnames': '../../../reggiedata/levelnames.xml',
-            'music': '../../../reggiedata/music.txt',
-            'spritecategories': '../../../reggiedata/spritecategories.xml',
-            'spritedata': '../../../reggiedata/spritedata.xml',
-            'tilesets': '../../../reggiedata/tilesets.xml',
-            'ts1_descriptions': '../../../reggiedata/ts1_descriptions.txt',
+            'bga': 'reggiedata/bga.txt',
+            'bgb': 'reggiedata/bgb.txt',
+            'entrancetypes': 'reggiedata/entrancetypes.txt',
+            'levelnames': 'reggiedata/levelnames.xml',
+            'music': 'reggiedata/music.txt',
+            'spritecategories': 'reggiedata/spritecategories.xml',
+            'spritedata': 'reggiedata/spritedata.xml',
+            'tilesets': 'reggiedata/tilesets.xml',
+            'ts1_descriptions': 'reggiedata/ts1_descriptions.txt',
             }
 
         self.strings = {
@@ -10172,7 +10172,7 @@ class ReggieTranslation():
         MaxVer = 1.0
 
         # Parse the file (errors are handled by __init__())
-        path = '../../../reggiedata/translations/' + name + '/main.xml'
+        path = 'reggiedata/translations/' + name + '/main.xml'
         tree = etree.parse(path)
         root = tree.getroot()
 
@@ -10191,7 +10191,7 @@ class ReggieTranslation():
         # Parse the nodes
         files = {}
         strings = False
-        addpath = '../../../reggiedata/translations/' + name + '/'
+        addpath = 'reggiedata/translations/' + name + '/'
         for node in root:
             if node.tag.lower() == 'file':
                 # It's a file node
@@ -11328,7 +11328,7 @@ class AboutDialog(QtWidgets.QDialog):
         del f
 
         # Logo
-        logo = QtGui.QPixmap('../../../reggiedata/about.png')
+        logo = QtGui.QPixmap('reggiedata/about.png')
         logoLabel = QtWidgets.QLabel()
         logoLabel.setPixmap(logo)
         logoLabel.setContentsMargins(16, 4, 32, 4)
@@ -12869,7 +12869,7 @@ class BGTab(QtWidgets.QWidget):
 
                 filename = gamedef.bgFile(val + '.png', slot.lower())
                 if not os.path.isfile(filename):
-                    filename = '../../../reggiedata/bg%s/no_preview.png' % slot.lower()
+                    filename = 'reggiedata/bg%s/no_preview.png' % slot.lower()
                 pix = QtGui.QPixmap(filename)
                 pix = pix.scaled(pix.width() * scale, pix.height() * scale)
                 eval('self.preview%d%s' % (boxnum, slot)).setPixmap(pix)
@@ -14425,10 +14425,10 @@ def getAvailableGameDefs():
     GameDefs = []
 
     # Add them
-    folders = os.listdir('../../../reggiedata/games')
+    folders = os.listdir('reggiedata/games')
     for folder in folders:
-        if not os.path.isdir('../../../reggiedata/games/' + folder): continue
-        inFolder = os.listdir('../../../reggiedata/games/' + folder)
+        if not os.path.isdir('reggiedata/games/' + folder): continue
+        inFolder = os.listdir('reggiedata/games/' + folder)
         if 'main.xml' not in inFolder: continue
         def_ = ReggieGameDefinition(folder)
         if def_.custom: GameDefs.append((def_, folder))
@@ -14958,10 +14958,10 @@ class PreferencesDialog(QtWidgets.QDialog):
                 self.Trans.setItemData(0, None, Qt.UserRole)
                 self.Trans.setCurrentIndex(0)
                 i = 1
-                for trans in os.listdir('../../../reggiedata/translations'):
+                for trans in os.listdir('reggiedata/translations'):
                     if trans.lower() == 'english': continue
 
-                    fp = '../../../reggiedata/translations/' + trans + '/main.xml'
+                    fp = 'reggiedata/translations/' + trans + '/main.xml'
                     if not os.path.isfile(fp): continue
 
                     transobj = ReggieTranslation(trans)
@@ -15188,12 +15188,12 @@ class PreferencesDialog(QtWidgets.QDialog):
             def getAvailableThemes(self):
                 """Searches the Themes folder and returns a list of theme filepaths.
                 Automatically adds 'Classic' to the list."""
-                themes = os.listdir('../../../reggiedata/themes')
+                themes = os.listdir('reggiedata/themes')
                 themeList = [('Classic', ReggieTheme())]
                 for themeName in themes:
                     try:
                         if themeName.split('.')[-1].lower() == 'rt':
-                            data = open('../../../reggiedata/themes/' + themeName, 'rb').read()
+                            data = open('reggiedata/themes/' + themeName, 'rb').read()
                             theme = ReggieTheme(data)
                             themeList.append((themeName, theme))
                     except Exception: pass
@@ -15227,7 +15227,7 @@ class PreferencesDialog(QtWidgets.QDialog):
                 UIColor = theme.color('ui')
                 if UIColor is None: UIColor = toQColor(240,240,240) # close enough
 
-                ice = QtGui.QPixmap('../../../reggiedata/sprites/ice_flow_7.png')
+                ice = QtGui.QPixmap('reggiedata/sprites/ice_flow_7.png')
 
                 global NumberFont
                 font = QtGui.QFont(NumberFont) # need to make a new instance to avoid changing global settings
@@ -15555,7 +15555,7 @@ class ReggieWindow(QtWidgets.QMainWindow):
         # set up the window
         QtWidgets.QMainWindow.__init__(self, None)
         self.setWindowTitle('Reggie Next')
-        self.setWindowIcon(QtGui.QIcon('../../../reggiedata/icon.png'))
+        self.setWindowIcon(QtGui.QIcon('reggiedata/icon.png'))
         self.setIconSize(QtCore.QSize(16, 16))
 
         # create the level view
@@ -16784,7 +16784,7 @@ class ReggieWindow(QtWidgets.QMainWindow):
         """
         Shows the help box
         """
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(os.path.join(module_path(), '../../../reggiedata', 'help', 'index.html')))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(os.path.join(module_path(), 'reggiedata', 'help', 'index.html')))
 
 
     @QtCore.pyqtSlot()
@@ -16792,7 +16792,7 @@ class ReggieWindow(QtWidgets.QMainWindow):
         """
         Reggie Tips and Commands
         """
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(os.path.join(module_path(), '../../../reggiedata', 'help', 'tips.html')))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(os.path.join(module_path(), 'reggiedata', 'help', 'tips.html')))
 
 
     @QtCore.pyqtSlot()
