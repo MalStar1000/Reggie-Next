@@ -144,7 +144,7 @@ class ReggieSplashScreen(QtWidgets.QSplashScreen):
         Reads the info from self.cfgData and loads stuff
         """
         self.basePix = QtGui.QPixmap(os.path.join('reggiedata', self.cfgData['base_image']))
-        print(os.getcwd())
+        #print(os.getcwd())
 
         def loadFont(name):
             fname = self.cfgData.get(name + '_font', 'Arial')
