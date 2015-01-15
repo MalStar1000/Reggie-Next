@@ -80,7 +80,7 @@ def GetImg(imgname, image=False):
     imgname = str(imgname)
 
     # Try to find the best path
-    path = 'reggiedata/sprites/' + imgname
+    path = '../../../reggiedata/sprites/' + imgname
 
     for folder in reversed(SpritesFolders): # find the most recent copy
         tryPath = folder + '/' + imgname
@@ -121,7 +121,7 @@ def LoadBasicSuite():
     ImageCache['Blocks'] = Blocks
 
     # Load the overrides
-    Overrides = QtGui.QPixmap('reggiedata/overrides.png')
+    Overrides = QtGui.QPixmap('../../../reggiedata/overrides.png')
     Blocks = []
     x = Overrides.width() // 24
     y = Overrides.height() // 24

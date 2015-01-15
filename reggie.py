@@ -118,7 +118,7 @@ class ReggieSplashScreen(QtWidgets.QSplashScreen):
         Loads the raw data from splash_config.txt
         """
         cfgData = {}
-        with open('reggiedata/splash_config.txt', encoding='utf-8') as cfg:
+        with open('../../../reggiedata/splash_config.txt', encoding='utf-8') as cfg:
             for line in cfg:
                 lsplit = line.replace('\n', '').split(':')
                 key = lsplit[0].lower()
@@ -143,7 +143,8 @@ class ReggieSplashScreen(QtWidgets.QSplashScreen):
         """
         Reads the info from self.cfgData and loads stuff
         """
-        self.basePix = QtGui.QPixmap(os.path.join('reggiedata', self.cfgData['base_image']))
+        self.basePix = QtGui.QPixmap(os.path.join('../../../reggiedata', self.cfgData['base_image']))
+        print(os.getcwd())
 
         def loadFont(name):
             fname = self.cfgData.get(name + '_font', 'Arial')
@@ -153,11 +154,13 @@ class ReggieSplashScreen(QtWidgets.QSplashScreen):
             wLim = self.cfgData.get(name + '_wrap_limit', 1024)
             position = self.cfgData.get(name + '_position', (0, 0))
             centered = self.cfgData.get(name + '_centered', False)
+            weight = self.cfgData.get(name + '_font_weight', 50)
 
             font = QtGui.QFont()
             font.setFamily(fname)
             font.setBold(bold)
             font.setPointSize(size)
+            font.setWeight(weight)
             return font, position, color, centered, wLim
 
         self.versionFontInfo = loadFont('version')
@@ -170,9 +173,9 @@ class ReggieSplashScreen(QtWidgets.QSplashScreen):
         self.meterPos = self.cfgData.get('meter_position', (0, 0))
         self.meterWidth = self.cfgData.get('meter_width', 64)
 
-        self.meterL = QtGui.QPixmap(os.path.join('reggiedata', mNameL))
-        self.meterM = QtGui.QPixmap(os.path.join('reggiedata', mNameM))
-        self.meterR = QtGui.QPixmap(os.path.join('reggiedata', mNameR))
+        self.meterL = QtGui.QPixmap(os.path.join('../../../reggiedata', mNameL))
+        self.meterM = QtGui.QPixmap(os.path.join('../../../reggiedata', mNameM))
+        self.meterR = QtGui.QPixmap(os.path.join('../../../reggiedata', mNameR))
 
 
     def setProgressLimit(self, limit):
@@ -333,7 +336,7 @@ def FilesAreMissing():
     Checks to see if any of the required files for Reggie are missing
     """
 
-    if not os.path.isdir('reggiedata'):
+    if not os.path.isdir('../../../reggiedata'):
         QtWidgets.QMessageBox.warning(None, trans.string('Err_MissingFiles', 0), trans.string('Err_MissingFiles', 1))
         return True
 
@@ -344,7 +347,7 @@ def FilesAreMissing():
     missing = []
 
     for check in required:
-        if not os.path.isfile('reggiedata/' + check):
+        if not os.path.isfile('../../../reggiedata/' + check):
             missing.append(check)
 
     if len(missing) > 0:
@@ -929,7 +932,7 @@ def LoadSpriteListData(reload_=False):
 
     paths = gamedef.recursiveFiles('spritelistdata')
     new = []
-    new.append('reggiedata/spritelistdata.txt')
+    new.append('../../../reggiedata/spritelistdata.txt')
     for path in paths: new.append(path)
     paths = new
 
@@ -2346,7 +2349,7 @@ def LoadOverrides():
     global Overrides
     Overrides = [None]*320
 
-    OverrideBitmap = QtGui.QPixmap('reggiedata/overrides.png')
+    OverrideBitmap = QtGui.QPixmap('../../../reggiedata/overrides.png')
     idx = 0
     xcount = OverrideBitmap.width() // 24
     ycount = OverrideBitmap.height() // 24
@@ -2443,7 +2446,7 @@ def LoadNumberFont():
     if hasattr(s, 'WindowsVersion'):
         NumberFont = QtGui.QFont('Tahoma', 7)
     elif hasattr(s, 'MacintoshVersion'):
-        NumberFont = QtGui.QFont('Lucida Grande', 9)
+        NumberFont = QtGui.QFont('Helvetica Neue', 9)
     else:
         NumberFont = QtGui.QFont('Sans', 8)
 
@@ -2843,7 +2846,7 @@ class LevelUnit():
         Adds an area
         """
         if course is None:
-            getit = open('reggiedata/blankcourse.bin', 'rb')
+            getit = open('../../../reggiedata/blankcourse.bin', 'rb')
             course = getit.read()
             getit.close()
         newArea = FakeAreaUnit()
@@ -5304,7 +5307,7 @@ class EntranceItem(LevelEditorItem):
         """
         if EntranceItem.EntranceImages is None:
             ei = []
-            src = QtGui.QPixmap('reggiedata/entrances.png')
+            src = QtGui.QPixmap('../../../reggiedata/entrances.png')
             for i in range(18):
                 ei.append(src.copy(i * 24, 0, 24, 24))
             EntranceItem.EntranceImages = ei
@@ -8235,7 +8238,7 @@ def LoadTheme():
     if id is None: id = 'Classic'
     if id != 'Classic':
 
-        path = str('reggiedata\\themes\\'+id).replace('\\', '/')
+        path = str('../../../reggiedata\\themes\\'+id).replace('\\', '/')
         with open(path, 'rb') as f:
             theme = ReggieTheme(f)
         
@@ -8498,7 +8501,7 @@ class ReggieTheme():
         cache = self.iconCacheLg if big else self.iconCacheSm
 
         if name not in cache:
-            path = 'reggiedata/ico/lg/icon-' if big else 'reggiedata/ico/sm/icon-'
+            path = '../../../reggiedata/ico/lg/icon-' if big else '../../../reggiedata/ico/sm/icon-'
             path += name
             cache[name] = QtGui.QIcon(path)
 
@@ -8956,7 +8959,7 @@ class ReggieGameDefinition():
         MaxVer = 1.0
 
         # Parse the file (errors are handled by __init__())
-        path = 'reggiedata/games/' + name + '/main.xml'
+        path = '../../../reggiedata/games/' + name + '/main.xml'
         tree = etree.parse(path)
         root = tree.getroot()
 
@@ -8974,7 +8977,7 @@ class ReggieGameDefinition():
         else: self.base = ReggieGameDefinition()
 
         # Parse the nodes
-        addpath = 'reggiedata/games/' + name + '/'
+        addpath = '../../../reggiedata/games/' + name + '/'
         for node in root:
             n = node.tag.lower()
             if n in ('file', 'folder'):
@@ -8986,9 +8989,9 @@ class ReggieGameDefinition():
                 if 'game' in node.attrib:
                     if node.attrib['game'] != trans.string('Gamedefs', 13): # 'New Super Mario Bros. Wii'
                         def_ = FindGameDef(node.attrib['game'], name)
-                        path = 'reggiedata/games/' + def_.gamepath + '/' + node.attrib['path']
+                        path = '../../../reggiedata/games/' + def_.gamepath + '/' + node.attrib['path']
                     else:
-                        path = 'reggiedata/' + node.attrib['path']
+                        path = '../../../reggiedata/' + node.attrib['path']
 
                 ListToAddTo = eval('self.%ss' % n) # self.files or self.folders
                 newdef = self.GameDefinitionFile(path, patch)
@@ -9016,7 +9019,7 @@ class ReggieGameDefinition():
         Returns the folder to a bg image. Layer must be 'a' or 'b'
         """
         # Name will be of the format '0000.png'
-        fallback = 'reggiedata/bg' + layer
+        fallback = '../../../reggiedata/bg' + layer
         filename = 'bg%s/%s' % (layer, name)
 
 
@@ -9247,7 +9250,7 @@ def getMusic():
 def FindGameDef(name, skip=None):
     "Helper function to find a game def with a specific name. Skip will be skipped"""
     toSearch = [None] # Add the original game first
-    for folder in os.listdir('reggiedata/games'): toSearch.append(folder)
+    for folder in os.listdir('../../../reggiedata/games'): toSearch.append(folder)
 
     for folder in toSearch:
         if folder == skip: continue
@@ -9302,15 +9305,15 @@ class ReggieTranslation():
         self.translator = 'Treeki, Tempus'
 
         self.files = {
-            'bga': 'reggiedata/bga.txt',
-            'bgb': 'reggiedata/bgb.txt',
-            'entrancetypes': 'reggiedata/entrancetypes.txt',
-            'levelnames': 'reggiedata/levelnames.xml',
-            'music': 'reggiedata/music.txt',
-            'spritecategories': 'reggiedata/spritecategories.xml',
-            'spritedata': 'reggiedata/spritedata.xml',
-            'tilesets': 'reggiedata/tilesets.xml',
-            'ts1_descriptions': 'reggiedata/ts1_descriptions.txt',
+            'bga': '../../../reggiedata/bga.txt',
+            'bgb': '../../../reggiedata/bgb.txt',
+            'entrancetypes': '../../../reggiedata/entrancetypes.txt',
+            'levelnames': '../../../reggiedata/levelnames.xml',
+            'music': '../../../reggiedata/music.txt',
+            'spritecategories': '../../../reggiedata/spritecategories.xml',
+            'spritedata': '../../../reggiedata/spritedata.xml',
+            'tilesets': '../../../reggiedata/tilesets.xml',
+            'ts1_descriptions': '../../../reggiedata/ts1_descriptions.txt',
             }
 
         self.strings = {
@@ -9664,9 +9667,9 @@ class ReggieTranslation():
                 15: 'Take a full size screenshot of your level for you to share',
                 16: 'Change Game Path...',
                 17: 'Set a different folder to load the game files from',
-                18: 'Reggie Next Preferences...',
+                18: 'Preferences',
                 19: 'Change important Reggie Next settings',
-                20: 'Exit Reggie Next',
+                20: 'Exit',
                 21: 'Exit the editor',
                 22: 'Select All',
                 23: 'Select all items in this area',
@@ -10169,7 +10172,7 @@ class ReggieTranslation():
         MaxVer = 1.0
 
         # Parse the file (errors are handled by __init__())
-        path = 'reggiedata/translations/' + name + '/main.xml'
+        path = '../../../reggiedata/translations/' + name + '/main.xml'
         tree = etree.parse(path)
         root = tree.getroot()
 
@@ -10188,7 +10191,7 @@ class ReggieTranslation():
         # Parse the nodes
         files = {}
         strings = False
-        addpath = 'reggiedata/translations/' + name + '/'
+        addpath = '../../../reggiedata/translations/' + name + '/'
         for node in root:
             if node.tag.lower() == 'file':
                 # It's a file node
@@ -10511,8 +10514,31 @@ class LevelViewWidget(QtWidgets.QGraphicsView):
         self.XScrollBar = QtWidgets.QScrollBar(Qt.Horizontal, parent)
         self.setVerticalScrollBar(self.YScrollBar)
         self.setHorizontalScrollBar(self.XScrollBar)
+        self.grabGesture(Qt.PinchGesture)
 
         self.currentobj = None
+    
+    #Gesture for Zoom
+    def event(self,event):
+        print('First Cond: ', event.type(), QtCore.QEvent.Gesture)
+        if event.type() == QtCore.QEvent.Gesture:
+            return self.myGestureZoomingFunction(event)
+        return QtWidgets.QGraphicsView.event(self, event)
+
+    def myGestureZoomingFunction(self, event):
+    # Make your zoom code here
+        print('Second Cond: ', event.gesture(Qt.PinchGesture))
+        if event.gesture(Qt.PinchGesture):
+            gesture = event.gesture(Qt.PinchGesture)
+            scale = gesture.scaleFactor()
+            print('Scale Factor: ', scale)
+            # scale = scale
+            self.scale(scale, scale) / 60
+
+    # accept the event
+        event.accept()
+        return True
+
 
     def mousePressEvent(self, event):
         """
@@ -11302,7 +11328,7 @@ class AboutDialog(QtWidgets.QDialog):
         del f
 
         # Logo
-        logo = QtGui.QPixmap('reggiedata/about.png')
+        logo = QtGui.QPixmap('../../../reggiedata/about.png')
         logoLabel = QtWidgets.QLabel()
         logoLabel.setPixmap(logo)
         logoLabel.setContentsMargins(16, 4, 32, 4)
@@ -12843,7 +12869,7 @@ class BGTab(QtWidgets.QWidget):
 
                 filename = gamedef.bgFile(val + '.png', slot.lower())
                 if not os.path.isfile(filename):
-                    filename = 'reggiedata/bg%s/no_preview.png' % slot.lower()
+                    filename = '../../../reggiedata/bg%s/no_preview.png' % slot.lower()
                 pix = QtGui.QPixmap(filename)
                 pix = pix.scaled(pix.width() * scale, pix.height() * scale)
                 eval('self.preview%d%s' % (boxnum, slot)).setPixmap(pix)
@@ -14399,10 +14425,10 @@ def getAvailableGameDefs():
     GameDefs = []
 
     # Add them
-    folders = os.listdir('reggiedata/games')
+    folders = os.listdir('../../../reggiedata/games')
     for folder in folders:
-        if not os.path.isdir('reggiedata/games/' + folder): continue
-        inFolder = os.listdir('reggiedata/games/' + folder)
+        if not os.path.isdir('../../../reggiedata/games/' + folder): continue
+        inFolder = os.listdir('../../../reggiedata/games/' + folder)
         if 'main.xml' not in inFolder: continue
         def_ = ReggieGameDefinition(folder)
         if def_.custom: GameDefs.append((def_, folder))
@@ -14606,6 +14632,9 @@ class ZoomWidget(QtWidgets.QWidget):
         """
         Creates and initializes the widget
         """
+        
+        QtWidgets.QGraphicsView.__init__(self)
+        
         QtWidgets.QWidget.__init__(self)
         maxwidth = 512-128
         maxheight = 20
@@ -14653,6 +14682,7 @@ class ZoomWidget(QtWidgets.QWidget):
         self.setMinimumWidth(maxwidth)
         self.setMaximumWidth(maxwidth)
         self.setMaximumHeight(maxheight)
+    # self.grabGesture(Qt.PinchGesture)
 
     def sliderMoved(self):
         """
@@ -14669,6 +14699,30 @@ class ZoomWidget(QtWidgets.QWidget):
     def findIndexOfLevel(self, level):
         for i, mainlevel in enumerate(mainWindow.ZoomLevels):
             if float(mainlevel) == float(level): return i
+
+    #Gesture for Zoom
+    #def event(self, event, level):
+    ''' print('First Cond: ', event.type(), QtCore.QEvent.Gesture)
+        if event.type() == QtCore.QEvent.Gesture:
+            return self.myGestureZoomingFunction(event)
+        return QtWidgets.QGraphicsView.event(self, event)
+
+    def myGestureZoomingFunction(self, event):
+        # Make your zoom code here
+        print('Second Cond: ', event.gesture(Qt.PinchGesture))
+        if event.gesture(Qt.PinchGesture):
+            gesture = event.gesture(Qt.PinchGesture)
+            ZoomTo = gesture.scaleFactor()
+            print('Scale Factor: ', scale)
+            # scale = scale
+            self.scale(ZoomTo, ZoomTo) / 60
+
+    # accept the event
+        event.accept()
+        return True'''
+    
+    ''' def zoomGesture(self)
+    #   We need something to add here. '''
 
 
 class ZoomStatusWidget(QtWidgets.QWidget):
@@ -14904,10 +14958,10 @@ class PreferencesDialog(QtWidgets.QDialog):
                 self.Trans.setItemData(0, None, Qt.UserRole)
                 self.Trans.setCurrentIndex(0)
                 i = 1
-                for trans in os.listdir('reggiedata/translations'):
+                for trans in os.listdir('../../../reggiedata/translations'):
                     if trans.lower() == 'english': continue
 
-                    fp = 'reggiedata/translations/' + trans + '/main.xml'
+                    fp = '../../../reggiedata/translations/' + trans + '/main.xml'
                     if not os.path.isfile(fp): continue
 
                     transobj = ReggieTranslation(trans)
@@ -15134,12 +15188,12 @@ class PreferencesDialog(QtWidgets.QDialog):
             def getAvailableThemes(self):
                 """Searches the Themes folder and returns a list of theme filepaths.
                 Automatically adds 'Classic' to the list."""
-                themes = os.listdir('reggiedata/themes')
+                themes = os.listdir('../../../reggiedata/themes')
                 themeList = [('Classic', ReggieTheme())]
                 for themeName in themes:
                     try:
                         if themeName.split('.')[-1].lower() == 'rt':
-                            data = open('reggiedata/themes/' + themeName, 'rb').read()
+                            data = open('../../../reggiedata/themes/' + themeName, 'rb').read()
                             theme = ReggieTheme(data)
                             themeList.append((themeName, theme))
                     except Exception: pass
@@ -15173,7 +15227,7 @@ class PreferencesDialog(QtWidgets.QDialog):
                 UIColor = theme.color('ui')
                 if UIColor is None: UIColor = toQColor(240,240,240) # close enough
 
-                ice = QtGui.QPixmap('reggiedata/sprites/ice_flow_7.png')
+                ice = QtGui.QPixmap('../../../reggiedata/sprites/ice_flow_7.png')
 
                 global NumberFont
                 font = QtGui.QFont(NumberFont) # need to make a new instance to avoid changing global settings
@@ -15500,8 +15554,8 @@ class ReggieWindow(QtWidgets.QMainWindow):
 
         # set up the window
         QtWidgets.QMainWindow.__init__(self, None)
-        self.setWindowTitle('Reggie Level Editor Next')
-        self.setWindowIcon(QtGui.QIcon('reggiedata/icon.png'))
+        self.setWindowTitle('Reggie Next')
+        self.setWindowIcon(QtGui.QIcon('../../../reggiedata/icon.png'))
         self.setIconSize(QtCore.QSize(16, 16))
 
         # create the level view
@@ -15515,13 +15569,19 @@ class ReggieWindow(QtWidgets.QMainWindow):
         self.view.XScrollBar.valueChanged.connect(self.XScrollChange)
         self.view.YScrollBar.valueChanged.connect(self.YScrollChange)
         self.view.FrameSize.connect(self.HandleWindowSizeChange)
-
+        #self.view.unifiedTitleAndToolBarOnMac = True
+        #self.setAttribute(Qt.WA_unifiedTitleAndToolBarOnMac)
+        #self.view.setAttribute(QWidgets.WA_unifiedTitleAndToolBarOnMac, True)
+        
+        
         # make a 'ribbon' placeholder
         self.ribbon = None
 
         # done creating the window!
         self.setCentralWidget(self.view)
-
+        # self.view.setAttribute(Qt.WA_TranslucentBackground, True)
+        #self.setAttribute(Qt.WA_TranslucentBackground, True)
+        
         # set up the clipboard stuff
         self.clipboard = None
         self.systemClipboard = QtWidgets.QApplication.clipboard()
@@ -15529,6 +15589,7 @@ class ReggieWindow(QtWidgets.QMainWindow):
 
         # we might have something there already, activate Paste if so
         self.TrackClipboardUpdates()
+    # self.grabGesture(Qt.PinchGesture)
 
 
     def __init2__(self):
@@ -15596,6 +15657,11 @@ class ReggieWindow(QtWidgets.QMainWindow):
         """
         self.RecentMenu = RecentFilesMenu()
         self.GameDefMenu = GameDefMenu()
+        #self.view.setWindowFlags(Qt.WA_UnifiedTitleAndToolBarOnMac)
+        #self.setAttribute(Qt.WA_unifiedTitleAndToolBarOnMac, True)
+        self.setUnifiedTitleAndToolBarOnMac(True)
+        #self.setAttribute(Qt.WA_MacBrushedMetal, True)
+
 
         self.ribbon = None
         if UseRibbon:
@@ -15666,7 +15732,7 @@ class ReggieWindow(QtWidgets.QMainWindow):
         self.CreateAction('showcomments', self.HandleCommentsVisibility, GetIcon('comments'), trans.stringOneLine('MenuItems', 116), trans.stringOneLine('MenuItems', 117), QtGui.QKeySequence('Ctrl+0'), True)
         self.CreateAction('grid', self.HandleSwitchGrid, GetIcon('grid'), trans.stringOneLine('MenuItems', 60), trans.stringOneLine('MenuItems', 61), QtGui.QKeySequence('Ctrl+G'), False)
         self.CreateAction('zoommax', self.HandleZoomMax, GetIcon('zoommax'), trans.stringOneLine('MenuItems', 62), trans.stringOneLine('MenuItems', 63), QtGui.QKeySequence('Ctrl+PgDown'), False)
-        self.CreateAction('zoomin', self.HandleZoomIn, GetIcon('zoomin'), trans.stringOneLine('MenuItems', 64), trans.stringOneLine('MenuItems', 65), QtGui.QKeySequence.ZoomIn, False)
+        self.CreateAction('zoomin', self.HandleZoomIn, GetIcon('zoomin'), trans.stringOneLine('MenuItems', 64), trans.stringOneLine('MenuItems', 65), Qt.PinchGesture, True) #QGesture.PinchGesture
         self.CreateAction('zoomactual', self.HandleZoomActual, GetIcon('zoomactual'), trans.stringOneLine('MenuItems', 66), trans.stringOneLine('MenuItems', 67), QtGui.QKeySequence('Ctrl+0'), False)
         self.CreateAction('zoomout', self.HandleZoomOut, GetIcon('zoomout'), trans.stringOneLine('MenuItems', 68), trans.stringOneLine('MenuItems', 69), QtGui.QKeySequence.ZoomOut, False)
         self.CreateAction('zoommin', self.HandleZoomMin, GetIcon('zoommin'), trans.stringOneLine('MenuItems', 70), trans.stringOneLine('MenuItems', 71), QtGui.QKeySequence('Ctrl+PgUp'), False)
@@ -16718,7 +16784,7 @@ class ReggieWindow(QtWidgets.QMainWindow):
         """
         Shows the help box
         """
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(os.path.join(module_path(), 'reggiedata', 'help', 'index.html')))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(os.path.join(module_path(), '../../../reggiedata', 'help', 'index.html')))
 
 
     @QtCore.pyqtSlot()
@@ -16726,7 +16792,7 @@ class ReggieWindow(QtWidgets.QMainWindow):
         """
         Reggie Tips and Commands
         """
-        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(os.path.join(module_path(), 'reggiedata', 'help', 'tips.html')))
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(os.path.join(module_path(), '../../../reggiedata', 'help', 'tips.html')))
 
 
     @QtCore.pyqtSlot()
@@ -17852,6 +17918,28 @@ class ReggieWindow(QtWidgets.QMainWindow):
         if zi >= 0:
             self.ZoomTo(self.ZoomLevels[zi])
 
+#Gesture for Zoom
+#def event(self, event, level):
+#print('First Cond: ', event.type(), QtCore.QEvent.Gesture)
+#if event.type() == QtCore.QEvent.Gesture:
+#return self.myGestureZoomingFunction(event)
+#return self.handleZoomIn(self, event)
+
+#def myGestureZoomingFunction(self, event):
+    # Make your zoom code here
+    #print('Second Cond: ', event.gesture(Qt.PinchGesture))
+    #if event.gesture(Qt.PinchGesture):
+    #gesture = event.gesture(Qt.PinchGesture)
+    #ZoomTo = gesture.scaleFactor()
+    #print('Scale Factor: ', scale)
+            # scale = scale
+            #self.zoomLevel(zoomLevel, zoomLevel)
+
+
+    # accept the event
+    # event.accept()
+    #return True
+
 
     @QtCore.pyqtSlot()
     def HandleZoomActual(self):
@@ -17884,6 +17972,22 @@ class ReggieWindow(QtWidgets.QMainWindow):
         self.ZoomLevel = z
         self.view.setTransform(tr)
         self.levelOverview.mainWindowScale = z/100.0
+        
+        '''def event(self, event, level):
+            print('First Cond: ', event.type(), QtCore.QEvent.Gesture)
+            if event.type() == QtCore.QEvent.Gesture:
+                return self.myGestureZoomingFunction(event)
+            return self.handleZoomIn(self, event)
+            if event.Gesture(Qt.PinchGesture):
+                gesture = event.gesture(Qt.PinchGesture)
+                ZoomTo = gesture.scaleFactor()
+                print('Scale Factor: ', scale)
+                self.zoomLevel(zoomLevel, zoomLevel)
+            
+            # accept the event
+            event.accept()
+            return True'''
+
 
         zi = self.ZoomLevels.index(z)
         if UseRibbon:
@@ -19524,7 +19628,7 @@ def main():
             setSetting('GamePath', path)
             break
 
-    # Check to see if we have anything saved
+    # check to see if we have anything saved
     autofile = setting('AutoSaveFilePath')
     if autofile is not None:
         autofiledata = setting('AutoSaveFileData', 'x')

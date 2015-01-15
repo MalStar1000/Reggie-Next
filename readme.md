@@ -3,9 +3,9 @@
 
 ----------------------------------------------------------------
 
-Homepage:  http://rvlution.net/reggie/  
-Support:   http://rvlution.net/forums/  
-On GitHub: https://github.com/RoadrunnerWMC/Reggie-Next
+Homepage & Support:  http://reggienext.nsmbwii.com
+GitHub: https://github.com/RoadrunnerWMC/Reggie-Next
+Mac Port Github: https://github.com/MalStar1000/Reggie-Next-Mac
 
 ----------------------------------------------------------------
 
@@ -60,7 +60,7 @@ Developers:
  * JasonP27 - ReggieMod Developer: Programmer, UI, Sprite Images
  * Kamek64 - Reggie! Newer Sprites Developer: Programmer, Sprite Images
  * ZementBlock - Sprite Data
- * MalStar1000 - Sprite Images, Other
+ * MalStar1000 - Sprite Images, Mac Port, Other
  * Grop - Sprite Data
  * joietyfull64 - Sprite Data
  * MidiGuyDP - NewerSMBW Background Images & Names
